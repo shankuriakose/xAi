@@ -1,14 +1,13 @@
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler as Scaler
 
 
+# -----------------------------
+# 1. Load Data
+# -----------------------------
 names = [
     "Num_of_Preg",
     "Glucose_Conc",
@@ -25,44 +24,44 @@ data = pd.read_csv("pima-indians-diabetes.csv", names=names)
 print("Shape of the data set: ", data.shape)
 
 
+# -----------------------------
+# 2. Data Cleaning
+# -----------------------------
 def data_cleaner(df):
-    # Replace 0 with Median not Mean
-    df["BP"] = df["BP"].replace(to_replace=0, value=df["BP"].median())
-    # Replace 0 with Median not Mean
-    df["BMI"] = df["BMI"].replace(to_replace=0, value=df["BMI"].median())
-    df["TwoHour_Insulin"] = df["TwoHour_Insulin"].fillna(df["TwoHour_Insulin"].median())
-    # Replace 0 with Median not Mean
-    df["Glucose_Conc"] = df["Glucose_Conc"].replace(
-        to_replace=0, value=df["Glucose_Conc"].median()
-    )
-    df["Skin_Thickness"] = df["Skin_Thickness"].fillna(df["Skin_Thickness"].median())
+    # Replace biologically impossible zeros with median values
+    zero_cols = ["Glucose_Conc", "BP", "Skin_Thickness", "BMI", "TwoHour_Insulin"]
+    for col in zero_cols:
+        df[col] = df[col].replace(0, df[col].median())
     return df
 
 
 df = data_cleaner(data)
 
+# -----------------------------
+# 3. Features & Labels
+# -----------------------------
 Xfeatures = df.iloc[:, 0:8]
 Ylabels = df["Class"]
 
-
+# Scale features
 scaler = Scaler()
 X = scaler.fit_transform(Xfeatures)
-
 X = pd.DataFrame(X, columns=names[0:8])
 
+# Train/test split
 X_train, X_test, y_train, y_test = train_test_split(
     X, Ylabels, test_size=0.2, random_state=42
 )
 
-
-# Logit
-logit = LogisticRegression()
+# -----------------------------
+# 4. Logistic Regression Model
+# -----------------------------
+logit = LogisticRegression(
+    solver="liblinear",  # more stable for small datasets
+    max_iter=500,  # allow convergence
+    penalty="l2",  # regularization
+    C=1.0,
+)
 logit.fit(X_train, y_train)
 
-
-print("Accuracy Score of Logisitic::", logit.score(X_test, y_test))
-
-# Prediction on A Single Sample
-sample_pred = logit.predict(np.array(X_test.values[0]).reshape(1, -1))
-
-print(sample_pred)
+print("Accuracy Score of Logistic Regression:", logit.score(X_test, y_test))
