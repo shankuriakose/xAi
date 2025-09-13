@@ -1,0 +1,11 @@
+## python 3.11
+
+numpy==2.0.2
+numba==0.60.0
+shap
+pandas
+scikit-learn
+matplotlib
+seaborn
+jupyter
+ipykernel
