@@ -31,7 +31,7 @@ This project demonstrates how to interpret machine learning predictions for the 
 ## Installation
 1. **Clone the repository:**
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/shankuriakose/xAi.git
    cd xAI
    ```
 2. **Set up a virtual environment:**
