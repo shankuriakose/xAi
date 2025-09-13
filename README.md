@@ -50,6 +50,12 @@ This project demonstrates how to interpret machine learning predictions for the 
    ```
 
 ## Usage
+- **Open Jupyter:**
+  Just type following command in the terminal and Open `Interpreting Pima Diabetes Prediction with SHAP,Eli5,LIME.ipynb`
+  ```bash
+  jupyter notebook
+  ```
+
 - **Run the main script (optional):**
   ```bash
   python main.py
